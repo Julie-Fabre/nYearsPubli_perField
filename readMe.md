@@ -6,4 +6,4 @@ Code and analysis outcome of an ongoing survey ([link](https://forms.gle/GksUQMK
 Please participate and share the survey link if you're interested! If the survey gets bigger, we will release more detailed information on fields outside of neuroscience too. 
 
 
-![alt text](./nYears_perField_plotimg.png)
+![alt text](./nYears_perField_cumulative.png)
