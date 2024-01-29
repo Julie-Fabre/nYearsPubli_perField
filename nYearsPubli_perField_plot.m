@@ -47,7 +47,7 @@ stairs([edges_no_live, edges_no_live(end) + 1], no_live_counts_plot, 'Color',...
 
 % make plot prettier 
 prettify_plot;
-legend({['researchers in neuroscience' newline 'working with live animals'...
+legend({['researchers in neuroscience' newline 'working with behaving animals'...
     newline 'n = ' num2str(numel(n_years_publi_neuro_live))],...
     ['other researchers' newline 'n = ' num2str(numel(n_years_publi_other))]})
 xlabel(['number of years from start of PhD' newline 'to 1rst "first author" publication'])
@@ -56,3 +56,10 @@ ylim([0, 0.55])
 
 % save plot 
 savefig(gcf, [currentFile.folder, filesep, 'nYearsPubli_perField_summary.csv'])
+
+% average
+nanmean(n_years_publi_other)
+nanmean(n_years_publi_neuro_live)
+
+nanstd(n_years_publi_other)/sqrt(length(n_years_publi_other))
+nanstd(n_years_publi_neuro_live)/sqrt(length(n_years_publi_neuro_live))
