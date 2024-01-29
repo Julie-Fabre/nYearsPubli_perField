@@ -1,8 +1,8 @@
 %% load and process data 
 
 % Load the data from CSV file into a table
-mfilename('fullpath')
-filename = './Downloads/Systems Neuroscience PhD paper publication time survey (Responses).csv';
+currentFile = dir(mfilename("fullpath"));
+filename = [currentFile.folder, filesep, 'nYearsPubli_perField_summary.csv'];
 dataTable = readtable(filename);
 
 % Get time to publication per category (neuroscience using live animals or
@@ -16,7 +16,7 @@ figure();
 
 % Data for publications in neuroscience using live animals during
 % experiments
-n_years_publi_neuro_live = n_years_publi(n_years_publi(:,2)==1,1);
+n_years_publi_neuro_live = dataTable.timeToFirstAuthorPub(dataTable.neuroField_liveAnimals & ~isnan(dataTable.timeToFirstAuthorPub));
 % Calculate bin edges centered around each year
 edges_neuro_live = (min(n_years_publi_neuro_live)-0.5):1:(max(n_years_publi_neuro_live)+0.5);
 % Compute histogram data
@@ -31,11 +31,11 @@ stairs([edges_neuro_live, edges_neuro_live(end) + 1], neuro_live_counts_plot,...
 hold on;
 
 % Data for publications in any other field
-n_years_publi_no_live = n_years_publi(n_years_publi(:,2)==0,1);
+n_years_publi_other = dataTable.timeToFirstAuthorPub(dataTable.neuroField_liveAnimals == 0 & ~isnan(dataTable.timeToFirstAuthorPub));
 % Calculate bin edges centered around each year
-edges_no_live = (min(n_years_publi_no_live)-0.5):1:(max(n_years_publi_no_live)+0.5);
+edges_no_live = (min(n_years_publi_other)-0.5):1:(max(n_years_publi_other)+0.5);
 % Compute histogram data
-[no_live_counts, ~] = histcounts(n_years_publi_no_live, edges_no_live);
+[no_live_counts, ~] = histcounts(n_years_publi_other, edges_no_live);
 % Normalize the histogram
 no_live_counts_normalized = no_live_counts / (sum(no_live_counts) * mode(diff(edges_no_live)));
 % Adjust counts for plot
@@ -49,7 +49,10 @@ stairs([edges_no_live, edges_no_live(end) + 1], no_live_counts_plot, 'Color',...
 prettify_plot;
 legend({['researchers in neuroscience' newline 'working with live animals'...
     newline 'n = ' num2str(numel(n_years_publi_neuro_live))],...
-    ['other researchers' newline 'n = ' num2str(numel(n_years_publi_no_live))]})
+    ['other researchers' newline 'n = ' num2str(numel(n_years_publi_other))]})
 xlabel(['number of years from start of PhD' newline 'to 1rst "first author" publication'])
 ylabel('fraction of researchers')
-ylim([0, 0.45])
+ylim([0, 0.55])
+
+% save plot 
+savefig(gcf, [currentFile.folder, filesep, 'nYearsPubli_perField_summary.csv'])
